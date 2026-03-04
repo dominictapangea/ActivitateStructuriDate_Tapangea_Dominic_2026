@@ -25,7 +25,7 @@ void afisareMasina(Masina masina) {
 
 void afisareVectorMasini(Masina* masini, int nrMasini) {
 	
-	if (masini = NULL || nrMasini == 0) {
+	if (masini == NULL || nrMasini == 0) {
 		printf("Vectorul de masini este gol\n");
 		return;
 	}
@@ -44,7 +44,7 @@ void adaugaMasinaInVector(Masina** masini, int * nrMasini, Masina masinaNoua) {
 	free(*masini);
 
 	*masini = temp;
-	*nrMasini++;
+	(*nrMasini)++;
 }
 
 Masina citireMasinaFisier(FILE* file) {
@@ -59,10 +59,10 @@ Masina citireMasinaFisier(FILE* file) {
 	masina.nrUsi = atoi(strtok(NULL, delimitator));
 	masina.pret = atof(strtok(NULL, delimitator));
 
-	char* aux = strtok(NULL, delimitator);
+	char* aux = (strtok(NULL, delimitator));
 	masina.model = malloc((strlen(aux) + 1) * sizeof(char));
 	strcpy(masina.model, aux);
-    aux = strtok(NULL, delimitator);
+    aux = (strtok(NULL, delimitator));
 	masina.numeSofer = (char*)malloc((strlen(aux) + 1) * sizeof(char));
 	strcpy(masina.numeSofer, aux);
 	masina.serie = strtok(NULL, delimitator)[0];
@@ -76,6 +76,25 @@ Masina* citireVectorMasiniFisier(const char* numeFisier, int* nrMasiniCitite) {
 	//prin apelul repetat al functiei citireMasinaFisier()
 	//numarul de masini este determinat prin numarul de citiri din fisier
 	//ATENTIE - la final inchidem fisierul/stream-ul
+	FILE* file = fopen(numeFisier, "r");
+	if (!file)
+	{
+		printf("Eroare la deschidere\n");
+		return;
+	}
+	else
+	{
+		Masina* vectorMasini = NULL;
+		*nrMasiniCitite = 0;
+		while (!feof(file))
+		{
+			Masina masina = citireMasinaFisier(file);
+			//(*nrMasiniCitite)++;
+			adaugaMasinaInVector(&vectorMasini, nrMasiniCitite, masina);
+		}
+		return vectorMasini;
+	}
+	
 }
 
 void dezalocareVectorMasini(Masina** vector, int* nrMasini) {
@@ -84,6 +103,9 @@ void dezalocareVectorMasini(Masina** vector, int* nrMasini) {
 
 int main() {
 
+	int nrMasini = 0;
+	Masina* masini = citireVectorMasiniFisier("masini.txt.txt", &nrMasini);
 
+	afisareVectorMasini(masini, nrMasini);
 	return 0;
 }
