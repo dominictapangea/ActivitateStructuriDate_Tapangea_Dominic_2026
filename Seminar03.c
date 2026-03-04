@@ -34,8 +34,7 @@ void afisareVectorMasini(Masina* masini, int nrMasini) {
 }
 
 void adaugaMasinaInVector(Masina** masini, int * nrMasini, Masina masinaNoua) {
-	//adauga in vectorul primit o noua masina pe care o primim ca parametru
-	//ATENTIE - se modifica numarul de masini din vector;
+	
 	Masina* temp = (Masina*)malloc(sizeof(Masina) * ((*nrMasini) + 1));
 	for (int i = 0;i < *nrMasini;i++) {
 		temp[i] = (*masini)[i];
@@ -49,8 +48,27 @@ void adaugaMasinaInVector(Masina** masini, int * nrMasini, Masina masinaNoua) {
 }
 
 Masina citireMasinaFisier(FILE* file) {
-	//functia citeste o masina dintr-un strceam deja deschis
+	//functia citeste o masina dintr-un stream deja deschis
 	//masina citita este returnata;
+	char linie[256];
+	fgets(linie, 256, file);
+	char delimitator[3] = ",\n";
+	Masina masina;
+
+	masina.id = atoi(strtok(linie, delimitator));
+	masina.nrUsi = atoi(strtok(NULL, delimitator));
+	masina.pret = atof(strtok(NULL, delimitator));
+
+	char* aux = strtok(NULL, delimitator);
+	masina.model = malloc((strlen(aux) + 1) * sizeof(char));
+	strcpy(masina.model, aux);
+    aux = strtok(NULL, delimitator);
+	masina.numeSofer = (char*)malloc((strlen(aux) + 1) * sizeof(char));
+	strcpy(masina.numeSofer, aux);
+	masina.serie = strtok(NULL, delimitator)[0];
+
+	return masina;
+
 }
 
 Masina* citireVectorMasiniFisier(const char* numeFisier, int* nrMasiniCitite) {
