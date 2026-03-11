@@ -61,8 +61,22 @@ void afisareListaMasini(Nod* cap) {
 	}
 }
 
-void adaugaMasinaInLista(/*lista de masini*/ Masina masinaNoua) {
-	//adauga la final in lista primita o noua masina pe care o primim ca parametru
+void adaugaMasinaInLista(Nod** cap, Masina masinaNoua) {
+	Nod* temp = malloc(sizeof(Nod));
+	temp->info = masinaNoua;
+	temp->next = NULL;
+	if (!(*cap)) {
+		*cap = temp;
+	}
+	else
+	{
+		Nod* p = *cap;
+		while (p->next)
+		{
+			p = p->next;
+		}
+		p->next = temp;
+	}
 }
 
 void adaugaLaInceputInLista(/*lista de masini*/ Masina masinaNoua) {
@@ -95,6 +109,7 @@ float calculeazaPretulMasinilorUnuiSofer(/*lista masini*/ const char* numeSofer)
 }
 
 int main() {
+	Nod* cap = NULL;
 
 
 	return 0;
