@@ -84,9 +84,15 @@ void adaugaLaInceputInLista(/*lista de masini*/ Masina masinaNoua) {
 }
 
 void* citireListaMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
+
+	FILE* file = fopen(numeFisier, "r");
+	Nod* cap = NULL;
+	while (!feof(file))
+	{
+		adaugaMasinaInLista(&cap, citireMasinaDinFisier(file));
+	}
+	fclose(file);
+	return cap;
 }
 
 void dezalocareListaMasini(/*lista de masini*/) {
