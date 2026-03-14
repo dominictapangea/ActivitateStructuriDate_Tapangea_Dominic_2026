@@ -61,7 +61,7 @@ void afisareListaMasini(Nod* cap) {
 	}
 }
 
-void adaugaMasinaInLista(Nod** cap, Masina masinaNoua) {
+void adaugaMasinaInLista(Nod* *cap, Masina masinaNoua) {
 	Nod* temp = malloc(sizeof(Nod));
 	temp->info = masinaNoua;
 	temp->next = NULL;
@@ -79,8 +79,12 @@ void adaugaMasinaInLista(Nod** cap, Masina masinaNoua) {
 	}
 }
 
-void adaugaLaInceputInLista(/*lista de masini*/ Masina masinaNoua) {
-	//adauga la inceputul listei o noua masina pe care o primim ca parametru
+void adaugaLaInceputInLista(Nod* *cap, Masina masinaNoua) {
+	
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+	nou->info = masinaNoua;
+	nou->next = cap;
+	*cap = nou;
 }
 
 void* citireListaMasiniDinFisier(const char* numeFisier) {
