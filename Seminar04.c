@@ -110,8 +110,17 @@ void dezalocareListaMasini(Nod** temp) {
 	}
 }
 
-float calculeazaPretMediu(/*lista de masini*/) {
-	//calculeaza pretul mediu al masinilor din lista.
+float calculeazaPretMediu(Nod* cap) {
+	float suma = 0;
+	int contor = 0;
+	while (cap) {
+		suma += cap->info.pret;
+		contor++;
+		cap = cap->next;
+	}
+	if (contor > 0) {
+		return suma / contor;
+	}
 	return 0;
 }
 
@@ -128,6 +137,8 @@ float calculeazaPretulMasinilorUnuiSofer(/*lista masini*/ const char* numeSofer)
 int main() {
 	Nod* cap = citireListaMasiniDinFisier("masini.txt.txt");
 	afisareListaMasini(cap);
+	printf("Pretul mediu este:%.2f\n", calculeazaPretMediu(cap));
+
 	dezalocareListaMasini(&cap);
 	return 0;
 }
