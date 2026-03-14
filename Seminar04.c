@@ -129,16 +129,22 @@ void stergeMasiniDinSeria(/*lista masini*/ char serieCautata) {
 	//tratati situatia ca masina se afla si pe prima pozitie, si pe ultima pozitie
 }
 
-float calculeazaPretulMasinilorUnuiSofer(/*lista masini*/ const char* numeSofer) {
-	//calculeaza pretul tuturor masinilor unui sofer.
-	return 0;
+float calculeazaPretulMasinilorUnuiSofer(Nod* cap, const char* numeSofer) {
+	float suma = 0;
+	while (cap) {
+		if (strcmp(cap->info.numeSofer, numeSofer) == 0) {
+			suma += cap->info.pret;
+		}
+		cap = cap->next;
+	}
+	return suma;
 }
 
 int main() {
 	Nod* cap = citireListaMasiniDinFisier("masini.txt.txt");
 	afisareListaMasini(cap);
 	printf("Pretul mediu este:%.2f\n", calculeazaPretMediu(cap));
-
+	printf("Pretul masinilor unui sofer este:%.2f\n", calculeazaPretulMasinilorUnuiSofer(cap,"Gigel"));
 	dezalocareListaMasini(&cap);
 	return 0;
 }
