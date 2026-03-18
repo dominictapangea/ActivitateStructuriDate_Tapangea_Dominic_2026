@@ -194,10 +194,25 @@ void stergeMasinaDupaID(ListaDubla*ld, int id) {
 }
 
 char* getNumeSoferMasinaScumpa(ListaDubla ld) {
-	//cauta masina cea mai scumpa si 
-	//returneaza numele soferului acestei maasini.
 
-	return NULL;
+	float pretMasina = -1;
+	char* sofer = NULL;
+
+	while (ld.prim)
+	{
+		if (ld.prim->info.pret > pretMasina) {
+
+			pretMasina = ld.prim->info.pret;
+			if (sofer != NULL) {
+				free(sofer);
+			}
+			sofer = malloc(sizeof(char) * strlen(ld.prim->info.numeSofer) + 1);
+			strcpy(sofer, ld.prim->info.numeSofer);
+
+		}
+		ld.prim = ld.prim->next;
+	}
+	return sofer;
 }
 
 int main() {
