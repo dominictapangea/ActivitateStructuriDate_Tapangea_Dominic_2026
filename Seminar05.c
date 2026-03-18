@@ -139,8 +139,20 @@ void dezalocareLDMasini(ListaDubla * ld) {
 	ld->prim = ld->ultim = NULL;
 }
 
-float calculeazaPretMediu(/*lista de masini*/) {
+float calculeazaPretMediu(ListaDubla * ld) {
 	//calculeaza pretul mediu al masinilor din lista.
+	float suma = 0;
+	int contor = 0;
+	Nod* temp = ld->prim;
+	while(temp!=NULL){
+		suma += temp->info.pret;
+		contor++;
+		temp = temp->next;
+	}
+	if (contor > 0) {
+	   return suma / contor;
+	}
+
 	return 0;
 }
 
@@ -149,9 +161,10 @@ void stergeMasinaDupaID(/*lista masini*/ int id) {
 	//tratati situatia ca masina se afla si pe prima pozitie, si pe ultima pozitie
 }
 
-char* getNumeSoferMasinaScumpa(/*lista dublu inlantuita*/) {
+char* getNumeSoferMasinaScumpa(ListaDubla ld) {
 	//cauta masina cea mai scumpa si 
 	//returneaza numele soferului acestei maasini.
+
 	return NULL;
 }
 
@@ -161,6 +174,7 @@ int main() {
 
 	ListaDubla lista = citireLDMasiniDinFisier("masini.txt.txt");
 	afisareListaMasini(lista);
-
+	printf("Pretul mediu unui sofer este:%.2f\n", calculeazaPretMediu(&lista));
+	dezalocareLDMasini(&lista);
 	return 0;
 }
