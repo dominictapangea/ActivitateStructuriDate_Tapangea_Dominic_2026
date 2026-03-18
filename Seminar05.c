@@ -123,8 +123,20 @@ ListaDubla citireLDMasiniDinFisier(const char* numeFisier) {
 	}
 }
 
-void dezalocareLDMasini(/*lista dubla de masini*/) {
-	//sunt dezalocate toate masinile si lista dublu inlantuita de elemente
+void dezalocareLDMasini(ListaDubla * ld) {
+
+	while (ld->prim && ld->prim->next) {
+		free(ld->prim->info.numeSofer);
+		free(ld->prim->info.model);
+		ld->prim = ld->prim->next;	
+		free(ld->prim->prev);
+	}
+	if (ld->prim) {
+		free(ld->prim->info.numeSofer);
+		free(ld->prim->info.model);
+		free(ld->prim);
+	}
+	ld->prim = ld->ultim = NULL;
 }
 
 float calculeazaPretMediu(/*lista de masini*/) {
