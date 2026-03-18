@@ -60,9 +60,22 @@ void afisareMasina(Masina masina) {
 	printf("Serie: %c\n\n", masina.serie);
 }
 
-void afisareListaMasini(ListaDubla * lista) {
-	//afiseaza toate elemente de tip masina din lista dublu inlantuita
-	//prin apelarea functiei afisareMasina()
+void afisareListaMasini(ListaDubla  lista) {
+	Nod* p = lista.prim;
+	while (p) {
+		afisareMasina(p->info);
+		p = p->next;
+	}
+
+}
+
+void afisareIntervalListaMasini(ListaDubla  lista) {
+	Nod* p = lista.ultim;
+	while (p) {
+		afisareMasina(p->info);
+		p = p->prev;
+	}
+
 }
 
 void adaugaMasinaInLista(/*lista dubla de masini*/ Masina masinaNoua) {
