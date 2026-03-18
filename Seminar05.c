@@ -156,9 +156,41 @@ float calculeazaPretMediu(ListaDubla * ld) {
 	return 0;
 }
 
-void stergeMasinaDupaID(/*lista masini*/ int id) {
+void stergeMasinaDupaID(ListaDubla*ld, int id) {
 	//sterge masina cu id-ul primit.
 	//tratati situatia ca masina se afla si pe prima pozitie, si pe ultima pozitie
+	if (ld->prim && ld->prim->info.id == id) {
+		free(ld->prim->info.model);
+		free(ld->prim->info.numeSofer);
+		ld->prim = ld->prim->next;
+		if (ld->prim) {
+			free(ld->prim->prev);
+		}
+		else {
+			free(ld->ultim);
+			ld->ultim = NULL;
+		}
+		return;
+	}
+	Nod* p = ld->prim;
+	while (p && p->info.id != id) {
+		p = p->next;
+	}
+	if (p) {
+		if (p->prev) {
+			p->prev->next = p->next;
+		}
+		if (p->next) {
+			p->next->prev = p->prev;
+		}
+		else {
+			p->prev->next = NULL;
+			ld->ultim = p->prev;
+		}
+		free(p->info.model);
+		free(p->info.numeSofer);
+		free(p);
+	}
 }
 
 char* getNumeSoferMasinaScumpa(ListaDubla ld) {
@@ -174,7 +206,11 @@ int main() {
 
 	ListaDubla lista = citireLDMasiniDinFisier("masini.txt.txt");
 	afisareListaMasini(lista);
-	printf("Pretul mediu unui sofer este:%.2f\n", calculeazaPretMediu(&lista));
-	dezalocareLDMasini(&lista);
+	//printf("Pretul mediu unui sofer este:%.2f\n", calculeazaPretMediu(&lista));
+
+	stergeMasinaDupaID(&lista, 10);
+	printf("Masina dupa stergere\n");
+		afisareListaMasini(lista);
+	//dezalocareLDMasini(&lista);
 	return 0;
 }
