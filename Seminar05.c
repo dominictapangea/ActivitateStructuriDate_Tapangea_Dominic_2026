@@ -78,8 +78,19 @@ void afisareIntervalListaMasini(ListaDubla  lista) {
 
 }
 
-void adaugaMasinaInLista(/*lista dubla de masini*/ Masina masinaNoua) {
-	//adauga la final in lista primita o noua masina pe care o primim ca parametru
+void adaugaMasinaInLista(ListaDubla* ld,  Masina masinaNoua) {
+
+	Nod* nou = malloc(sizeof(Nod));
+	nou->info = masinaNoua;
+	nou->next = NULL;
+	nou->prev = ld->ultim;
+	if (ld->ultim != NULL) {
+		ld->ultim->next = nou;
+	}
+	else {
+		ld->prim = nou;
+	}
+	ld->ultim = nou;
 }
 
 void adaugaLaInceputInLista(/*lista dubla de masini*/ Masina masinaNoua) {
