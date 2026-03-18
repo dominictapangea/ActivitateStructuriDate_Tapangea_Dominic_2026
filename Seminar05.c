@@ -108,10 +108,19 @@ void adaugaLaInceputInLista(ListaDubla * ld, Masina masinaNoua) {
 	ld->prim= nou;
 }
 
-void* citireLDMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
+ListaDubla citireLDMasiniDinFisier(const char* numeFisier) {
+	
+
+	FILE* f = fopen(numeFisier, "r");
+	if (f) {
+		ListaDubla ld;
+		ld.prim = ld.ultim = NULL;
+		while (!feof(f)) {
+			adaugaMasinaInLista(&ld, citireMasinaDinFisier(f));
+		}
+		fclose(f);
+		return ld;
+	}
 }
 
 void dezalocareLDMasini(/*lista dubla de masini*/) {
@@ -136,9 +145,10 @@ char* getNumeSoferMasinaScumpa(/*lista dublu inlantuita*/) {
 
 int main() {
 
-	ListaDubla lista;
-	lista.prim = NULL;
-	lista.ultim = NULL;
+
+
+	ListaDubla lista = citireLDMasiniDinFisier("masini.txt.txt");
+	afisareListaMasini(lista);
 
 	return 0;
 }
