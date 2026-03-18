@@ -93,8 +93,19 @@ void adaugaMasinaInLista(ListaDubla* ld,  Masina masinaNoua) {
 	ld->ultim = nou;
 }
 
-void adaugaLaInceputInLista(/*lista dubla de masini*/ Masina masinaNoua) {
-	//adauga la inceputul listei dublu inlantuite o noua masina pe care o primim ca parametru
+void adaugaLaInceputInLista(ListaDubla * ld, Masina masinaNoua) {
+
+	Nod* nou = malloc(sizeof(Nod));
+	nou->info = masinaNoua;
+	nou->next = ld->prim;
+	nou->prev = NULL;
+	if (ld->prim) {
+		ld->ultim->prev = nou;
+	}
+	else {
+		ld->ultim= nou;
+	}
+	ld->prim= nou;
 }
 
 void* citireLDMasiniDinFisier(const char* numeFisier) {
