@@ -107,21 +107,65 @@ int size(/*stiva*/) {
 	//returneaza numarul de elemente din stiva
 }
 
+typedef NodDublu NodDublu;
+struct NodDublu
+{
+	Masina info;
+	NodDublu* next;
+	NodDublu* prev;
+
+};
+typedef struct ListaDubla ListaD;
+struct ListaDubla
+{
+	NodDublu* first;
+	NodDublu* last;
+};
+
 //QUEUE
 //Alegeti prin ce veti reprezenta coada si creati structura necesara acestei cozi
 //putem reprezenta o coada prin LSI, LDI sau vector
-void enqueue(/*coada*/ Masina masina) {
+void enqueue(ListaD* coada , Masina masina) {
 	//adauga o masina in coada
+	NodDublu* newNod = malloc(sizeof(NodDublu));
+	newNod->info = masina;
+	newNod->next = NULL;
+	newNod->prev = coada->last;
+	if (coada->last) {
+		coada->last->next = newNod;
+	}
+	else {
+		coada->first = newNod;
+	}
+	coada->last = newNod;
+
 }
 
-Masina dequeue(/*coada*/) {
+Masina dequeue(ListaD* coada) {
 	//extrage o masina din coada
+	Masina rezultat;
+	rezultat.id = -1;
+	if (coada->first) {
+		rezultat = coada->first->info;
+		NodDublu* temp = coada->first;
+		coada->first = temp->next;
+		free(temp);
+	}
+	return rezultat;
 }
 
-void* citireCoadaDeMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
+ListaD citireCoadaDeMasiniDinFisier(const char* numeFisier) {
+	
+	ListaD coada;
+	coada.first = coada.last = NULL;
+	FILE* f = fopen(numeFisier, "r");
+	if (f) {
+		while (!feof(f)) {
+			enqueue(&coada, citireMasinaDinFisier(f));
+		}
+		fclose(f);
+	}
+	return coada;
 }
 
 void dezalocareCoadaDeMasini(/*coada*/) {
@@ -167,6 +211,12 @@ int main() {
 	afisareMasina(popStack(&stiva));
 
 	afisareMasina(getMasinaByID(&stiva, 7));
+
+	printf("coada-------------------------------\n");
+	ListaD coada = citireCoadaDeMasiniDinFisier("masini.txt.txt");
+	afisareMasina(dequeue(&coada));
+	afisareMasina(dequeue(&coada));
+
 
 	return 0;
 }
