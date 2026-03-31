@@ -14,6 +14,7 @@ struct StructuraMasina {
 };
 typedef struct StructuraMasina Masina;
 
+
 Masina citireMasinaDinFisier(FILE* file) {
 	char buffer[100];
 	char sep[3] = ",\n";
@@ -46,47 +47,56 @@ void afisareMasina(Masina masina) {
 }
 
 //STACK
+typedef struct Nod Nod;
 
 struct Nod {
 	Masina masina;
 	Nod* next;
 };
-typedef struct Nod Nod;
 
 
-void pushStack(Nod** cap,  Masina masina) {
+void pushStack(Nod** stiva,  Masina masina) {
 
 	Nod* first = (Nod*)malloc(sizeof(Nod));
 	first->masina = masina;
-	first->next = cap;
-	(*cap) = first;
+	first->next = *stiva;
+	(*stiva) = first;
 
 }
 
-Masina popStack(Nod** cap) {
-	if ((*cap) == NULL) {
+Masina popStack(Nod** stiva) {
+	if ((*stiva) == NULL) {
 		Masina rezultat;
 		rezultat.id = -1;
 		return rezultat;
 	}
 
-	Masina rezultat = (*cap)->masina;
-	Nod* temp = (*cap)->next;
-	free(*cap);
-	*cap = temp;
+	Masina rezultat = (*stiva)->masina;
+	Nod* temp = (*stiva)->next;
+	free(*stiva);
+	*stiva = temp;
 	return rezultat;
 
 }
 
-char isEmptyStack(Nod** cap) {
+char isEmptyStack(Nod** stiva) {
 
-	return cap = NULL;
+	return stiva = NULL;
 }
 
 void* citireStackMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
+
+	FILE* file = fopen(numeFisier, "r");
+	if (!file) {
+		return NULL;
+	}
+	Nod* stiva = (Nod*)malloc(sizeof(Nod));
+	while (!feof(file)) {
+		Masina masina = citireMasinaDinFisier(file);
+		pushStack(&stiva, masina);
+	}
+	fclose(file);
+	return stiva;
 }
 
 void dezalocareStivaDeMasini(/*stiva*/) {
@@ -126,6 +136,10 @@ float calculeazaPretTotal(/*stiva sau coada de masini*/);
 
 int main() {
 
+	Nod* stiva = citireStackMasiniDinFisier("masini.txt.txt");
+
+	afisareMasina(popStack(&stiva));
+	afisareMasina(popStack(&stiva));
 
 	return 0;
 }
