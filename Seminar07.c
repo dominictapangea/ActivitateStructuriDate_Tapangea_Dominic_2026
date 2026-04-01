@@ -25,7 +25,7 @@ struct Nod {
 
 struct HashTable {
 	int dim;
-
+	Nod** vector;
 };
 typedef struct HashTable HashTable;
 
@@ -94,11 +94,17 @@ void adaugaMasinaInLista(Nod** lista, Masina masinaNoua) {
 HashTable initializareHashTable(int dimensiune) {
 	HashTable ht;
 	//initializeaza vectorul de liste si seteaza fiecare lista ca fiind NULL;
+	ht.dim = dimensiune;
+	ht.vector = malloc(dimensiune * sizeof(Nod*));
+		for (int i = 0;i < dimensiune;i++) {
+			ht.vector[i] = NULL;
+	}
 	return ht;
 }
 
-int calculeazaHash(/*atribut al masini pentru clusterizare*/ int dimensiune) {
-	// este calculat hash-ul in functie de dimensiunea tabelei si un atribut al masinii
+int calculeazaHash(int id, int dimensiune) {
+	
+	return (id * 3) % dimensiune;
 }
 
 void inserareMasinaInTabela(HashTable hash, Masina galerie) {
