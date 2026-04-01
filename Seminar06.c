@@ -81,7 +81,7 @@ Masina popStack(Nod** stiva) {
 
 char isEmptyStack(Nod** stiva) {
 
-	return stiva = NULL;
+	return (*stiva) == NULL;
 }
 
 void* citireStackMasiniDinFisier(const char* numeFisier) {
@@ -90,7 +90,7 @@ void* citireStackMasiniDinFisier(const char* numeFisier) {
 	if (!file) {
 		return NULL;
 	}
-	Nod* stiva = (Nod*)malloc(sizeof(Nod));
+	Nod* stiva = NULL;
 	while (!feof(file)) {
 		Masina masina = citireMasinaDinFisier(file);
 		pushStack(&stiva, masina);
@@ -107,17 +107,15 @@ int size(/*stiva*/) {
 	//returneaza numarul de elemente din stiva
 }
 
-typedef NodDublu NodDublu;
-struct NodDublu
-{
+typedef struct NodDublu NodDublu;
+struct NodDublu {
 	Masina info;
 	NodDublu* next;
 	NodDublu* prev;
-
 };
+
 typedef struct ListaDubla ListaD;
-struct ListaDubla
-{
+struct ListaDubla {
 	NodDublu* first;
 	NodDublu* last;
 };
@@ -149,6 +147,12 @@ Masina dequeue(ListaD* coada) {
 		rezultat = coada->first->info;
 		NodDublu* temp = coada->first;
 		coada->first = temp->next;
+		if (coada->first == NULL) {
+			coada->last = NULL; // Coada a rãmas goalã
+		}
+		else {
+			coada->first->prev = NULL; // Rupem legãtura înapoi
+		}
 		free(temp);
 	}
 	return rezultat;
@@ -185,9 +189,9 @@ Masina getMasinaByID(Nod** stiva, int id) {
 	Nod* stivaNoua = NULL;
 	while ((*stiva)) {
 		Masina masinaNoua = popStack(stiva);
-		if (masinaNoua.id == id)
-		{
+		if (masinaNoua.id == id) {
 			rezultat = masinaNoua;
+			pushStack(&stivaNoua, masinaNoua); // O punem în stiva auxiliarã ca sã fie pusã înapoi
 			break;
 		}
 		else {
