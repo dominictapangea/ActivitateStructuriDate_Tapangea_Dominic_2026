@@ -107,9 +107,17 @@ int calculeazaHash(int id, int dimensiune) {
 	return (id * 3) % dimensiune;
 }
 
-void inserareMasinaInTabela(HashTable hash, Masina galerie) {
-	//este folosit mecanismul CHAINING
-	//este determinata pozitia si se realizeaza inserarea pe pozitia respectiva
+void inserareMasinaInTabela(HashTable hash, Masina masina) {
+	
+	int hashCode = calculeazaHash(masina.id, hash.dim);
+	if(hash.vector[hashCode]){
+		//nu avem coliziune
+		adaugaMasinaInLista(&hash.vector[hashCode], masina);
+	}
+	else {
+		//AVEM COLIZIUNE
+		adaugaMasinaInLista(&hash.vector[hashCode], masina);
+	}
 }
 
 HashTable citireMasiniDinFisier(const char* numeFisier) {
