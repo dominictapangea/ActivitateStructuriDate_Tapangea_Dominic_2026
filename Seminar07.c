@@ -121,14 +121,27 @@ void inserareMasinaInTabela(HashTable hash, Masina masina) {
 }
 
 HashTable citireMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	// aceste masini sunt inserate intr-o tabela de dispersie initializata aici
-	//ATENTIE - la final inchidem fisierul/stream-ul
+
+	FILE* file = fopen(numeFisier, "r");
+	HashTable hash = initializareHashTable(5);
+	if (file) {
+	
+		while (!feof(file)) {
+			Masina masinaCitita = citireMasinaDinFisier(file);
+			inserareMasinaInTabela(hash, masinaCitita);
+		}
+	}
+	fclose(file);
+	return hash;
 }
 
 void afisareTabelaDeMasini(HashTable ht) {
-	//sunt afisate toate masinile cu evidentierea clusterelor realizate
+
+	for (int i = 0;i < ht.dim;i++) {
+		printf("Clusterul %d:\n", i + 1);
+		afisareListaMasini(ht.vector[i]);
+		printf("\n___________________\n");
+	}
 }
 
 void dezalocareTabelaDeMasini(HashTable *ht) {
@@ -142,15 +155,33 @@ float* calculeazaPreturiMediiPerClustere(HashTable ht, int* nrClustere) {
 	return NULL;
 }
 
-Masina getMasinaDupaCheie(HashTable ht /*valoarea pentru masina cautata*/) {
+Masina getMasinaDupaId(HashTable ht , int id) {
 	Masina m;
+	m.id = -1;
 	//cauta masina dupa valoarea atributului cheie folosit in calcularea hash-ului
 	//trebuie sa modificam numele functiei 
+	int hashCode = calculeazaHash(id, ht.dim);
+	Nod* cautare = ht.vector[hashCode];
+	while (cautare) {
+		if (cautare->info.id == id) {
+			m = cautare->info;
+			m.numeSofer = (char*)malloc(sizeof(char) * (strlen(cautare->info.numeSofer) + 1));
+			strcpy(m.numeSofer, cautare->info.numeSofer);
+			m.model = (char*)malloc(sizeof(char) * (strlen(cautare->info.model) + 1));
+			strcpy(m.model, cautare->info.model);
+			return m;
+		}
+		cautare = cautare->next;
+	}
+
 	return m;
 }
 
 int main() {
-
+	HashTable hash = citireMasiniDinFisier("masini.txt.txt");
+	afisareTabelaDeMasini(hash);
+	Masina test = getMasinaDupaId(hash, 8);
+	afisareMasina(test);
 
 	return 0;
 }
