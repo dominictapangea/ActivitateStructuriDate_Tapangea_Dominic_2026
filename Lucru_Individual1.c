@@ -36,3 +36,18 @@ void adaugaLaptopInVector(Laptop** vector, int* nrLaptopuri, Laptop laptopNou)
 	*vector = temp;
 	(*nrLaptopuri)++;
 }
+
+Laptop citireLaptopDinFisier(FILE* f)
+{
+	char buffer[256];
+	fgets(buffer, 256, f);
+	
+	char delimitator[3] = ",\n";
+
+	int id = atoi(strtok(buffer, delimitator));
+	char* brand_temp = strtok(NULL, delimitator);
+	float pret = atof(strtok(NULL, delimitator));
+
+	Laptop laptop = initializare(id, brand_temp, pret);
+	return laptop;
+}
