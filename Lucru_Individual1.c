@@ -51,3 +51,22 @@ Laptop citireLaptopDinFisier(FILE* f)
 	Laptop laptop = initializare(id, brand_temp, pret);
 	return laptop;
 }
+
+Laptop* citireVectorFisier(const char* numeFisier, int* nrLaptopuri)
+{
+	FILE* file = fopen(numeFisier,"r");
+	if (!file) {
+		printf("Eroare la deschidere\n");
+		return;
+	}
+	
+		Laptop* vector = NULL;
+		*nrLaptopuri = 0;
+
+		while (!feof(file)) {
+			Laptop laptopNou= citireLaptopDinFisier(file);
+			adaugaLaptopInVector(&vector, nrLaptopuri, laptopNou);
+		}
+		fclose(file);
+		return vector;
+}
