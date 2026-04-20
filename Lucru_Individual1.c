@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -57,7 +58,7 @@ Laptop* citireVectorFisier(const char* numeFisier, int* nrLaptopuri)
 	FILE* file = fopen(numeFisier,"r");
 	if (!file) {
 		printf("Eroare la deschidere\n");
-		return;
+		return NULL;
 	}
 	
 		Laptop* vector = NULL;
@@ -69,4 +70,32 @@ Laptop* citireVectorFisier(const char* numeFisier, int* nrLaptopuri)
 		}
 		fclose(file);
 		return vector;
+}
+
+void dezalocare(Laptop** vector, int* nrLaptopuri)
+{
+	for (int i = 0;i < *nrLaptopuri;i++) {
+		free((*vector)[i].brand);
+		(*vector)[i].brand = NULL;
+	}
+	free(*vector);
+	*vector = NULL;
+	*nrLaptopuri = 0;
+}
+
+int main() {
+
+	int nrLaptopuri = 0;
+
+	Laptop* vectorLaptopuri = citireVectorFisier("laptopuri.txt", &nrLaptopuri);
+
+	if (vectorLaptopuri != NULL && nrLaptopuri > 0) {
+		for (int i = 0;i < nrLaptopuri;i++) {
+			afisareLaptop(vectorLaptopuri[i]);
+		}
+	}
+	else
+		printf("Nu s au gasit laptopuri\n");
+
+	dezalocare(&vectorLaptopuri, &nrLaptopuri);
 }
