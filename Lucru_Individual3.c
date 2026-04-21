@@ -106,3 +106,28 @@ ListaDubla citireLDCartiDinFisier(const char* numeFisier) {
 	fclose(f);
 	return lista;
 }
+
+void stergeCarteDupaID(ListaDubla* lista, int idCautat)
+{
+	Nod* p = lista->prim;
+	while (p != NULL && p->info.id != idCautat) {
+		p = p->next;
+	}
+	if (p) {
+		if (p->prev != NULL) {
+			p->prev->next = p->next;
+		}
+		else {
+			lista->prim = p->next;
+		}
+
+		if (p->next != NULL) {
+			p->next->prev = p->prev;
+		}
+		else {
+			lista->ultim = p->prev;
+		}
+		free(p->info.titlu);
+		free(p);
+	}
+}
