@@ -49,3 +49,60 @@ void inserareLaFinal(ListaDubla* lista, Carte carteNoua)
 	}
 	lista->ultim = nou;
 }
+
+void afisareCarte(Carte carte) {
+	
+	printf("ID: %d || Titlu: %-10s || Pret: %.2f\n", carte.id, carte.titlu, carte.pret);
+}
+
+void afisareDeLaInceput(ListaDubla lista) {
+
+	Nod* temp = lista.prim;
+
+	while (temp) {
+		afisareCarte(temp->info);
+		temp = temp->next;
+	}
+}
+
+void afisareDeLaFinal(ListaDubla lista) {
+
+	Nod* temp = lista.ultim;
+	while (temp) {
+		afisareCarte(temp->info);
+		temp = temp->prev;
+	}
+}
+
+Carte citireCarteDinFisier(FILE* f) {
+	char buffer[256];
+	fgets(buffer, 256, f);
+
+	char delimitator[3] = ",\n";
+
+	int id = atoi(strtok(buffer, delimitator));
+	char* titlu_temp = strtok(NULL, delimitator);
+	float pret = atof(strtok(NULL, delimitator));
+
+	return Initializare(id, titlu_temp, pret);
+}
+
+ListaDubla citireLDCartiDinFisier(const char* numeFisier) {
+
+	ListaDubla lista;
+	lista.prim = NULL;
+	lista.ultim = NULL;
+	
+	FILE* f = fopen(numeFisier, "r");
+	if (!f) {
+		printf("Eroare la deschiderea fisierului\n");
+		return lista;
+	}
+
+	while (!feof(f)) {
+		Carte c = citireCarteDinFisier(f);
+		inserareLaFinal(&lista, c);
+	}
+	fclose(f);
+	return lista;
+}
