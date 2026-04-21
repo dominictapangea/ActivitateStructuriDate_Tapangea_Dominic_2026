@@ -39,7 +39,7 @@ void inserareLaInceput(Nod** cap, Carte carteNoua)
 }
 
 void afisareCarte(Carte carte) {
-	printf("ID: %d || Brand: %-10s || Pret: %.2f\n", carte.id, carte.titlu, carte.pret);
+	printf("ID: %d || Titlu: %-10s || Pret: %.2f\n", carte.id, carte.titlu, carte.pret);
     
 }
 
@@ -51,7 +51,57 @@ void afisareLista(Nod* cap) {
 	}
 }
 
+void inserareLaFinal(Nod** cap, Carte carteNoua) {
+
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+	nou->info = carteNoua;
+	nou->next = NULL;
+	if (!*cap) {
+		*cap = nou;
+	}
+	else
+	{
+		Nod* temp = *cap;
+		while (temp->next != NULL) {
+			temp = temp->next;
+		}
+		temp->next = nou;
+	}
+}
+
+Carte citireCarteDinFisier(FILE* f) {
+	char buffer[256];
+	fgets(buffer, 256, f);
+
+	char delimitator[3] = ",\n";
+
+	int id = atoi(strtok(buffer, delimitator));
+	char* titlu_temp = strtok(NULL, delimitator);
+	float pret = atof(strtok(NULL, delimitator));
+
+	return Initializare(id, titlu_temp, pret);
+}
+
+Nod* citireListaCartiDinFisier(const char* numeFisier) {
+
+	FILE* f = fopen(numeFisier, "r");
+	if (!f) {
+		printf("eroare la deschiderea fisierului!\n");
+		return NULL;
+	}
+	Nod* cap = NULL;
+
+	while (!feof(f)) {
+		Carte carteNoua = citireCarteDinFisier(f);
+		inserareLaFinal(&cap, carteNoua);
+	}
+	fclose(f);
+	return cap;
+}
+
 int main()
 {
+	Nod* cap = NULL;
+
 
 }
