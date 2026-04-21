@@ -99,9 +99,56 @@ Nod* citireListaCartiDinFisier(const char* numeFisier) {
 	return cap;
 }
 
+void stergeCarteDupaID(Nod** cap, int idCautat) {
+
+	Nod* curent = *cap;
+	Nod* anterior = NULL;
+	while (curent != NULL) {
+		if (curent->info.id == idCautat) {
+
+			if (anterior == NULL) {
+				*cap = curent->next;
+			}
+			else 
+			{
+				anterior->next = curent->next;
+			}
+
+			free(curent->info.titlu);
+			free(curent);
+		}
+		else
+		{
+			anterior = curent;
+			curent = curent->next;
+		}
+	}
+}
+
+void dezalocareLista(Nod** cap) {
+	while (*cap) {
+		Nod* temp = (*cap)->next;
+		free((*cap)->info.titlu);
+		free(*cap);
+		*cap = temp;
+	}
+}
+
 int main()
 {
-	Nod* cap = NULL;
+	Nod* cap = citireListaCartiDinFisier("carti.txt");
 
+	afisareLista(cap); //lista initiala
 
+	Carte cNoua = Initializare(10, "Baltagul", 45.00);
+
+	inserareLaFinal(&cap, cNoua);
+	afisareLista(cap);
+
+	stergeCarteDupaID(&cap, 10);
+	afisareLista(cap);
+
+	dezalocareLista(&cap);
+
+	return 0;
 }
