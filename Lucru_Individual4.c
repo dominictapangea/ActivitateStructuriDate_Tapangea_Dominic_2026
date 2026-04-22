@@ -106,3 +106,80 @@ Pachet dequeue(Coada* banda) {
 		return rezultat;
 	}
 }
+
+Pachet getPachetDinStiva(NodStiva** stivaPrincipala, int idCautat) {
+
+	Pachet rezultat;
+	rezultat.id = -1;
+
+	NodStiva* stivaAux = NULL;
+
+	while (*stivaPrincipala != NULL) {
+
+		Pachet p = popStiva(stivaPrincipala); 
+
+		if (p.id == idCautat) {
+			rezultat = p; 
+			pushStiva(&stivaAux, p);
+			break; 
+		}
+		else {
+			
+			pushStiva(&stivaAux, p);
+		}
+	}
+
+	while (stivaAux != NULL) {
+		
+		pushStiva(stivaPrincipala, popStiva(&stivaAux));
+	}
+
+	return rezultat;
+}
+
+Pachet citirePachetDinFisier(FILE* f) {
+	char buffer[256];
+	fgets(buffer, 256, f);
+
+	char delimitator[3] = ",\n";
+
+	int id = atoi(strtok(buffer, delimitator));
+	char* destinatar_temp = strtok(NULL, delimitator);
+	float greutate = atof(strtok(NULL, delimitator));
+
+	return Initializare(id, destinatar_temp, greutate);
+}
+
+NodStiva* citireStivaDinFisier(const char* numeFisier)
+{
+	FILE* f = fopen(numeFisier, "r");
+	if (!f) {
+		return NULL;
+	}
+	NodStiva* cap = NULL;
+	while (!feof(f)) {
+		pushStiva(&cap, citirePachetDinFisier(f));
+	}
+	fclose(f);
+	return cap;
+}
+
+Coada citireCoadaDinFisier(const char* numeFisier)
+{
+	Coada banda;
+	banda.prim = NULL;
+	banda.ultim = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+	if (!f) {
+		printf("eroare");
+		return banda;
+	}
+	
+	while (!feof(f)) {
+		enqueue(&banda, citirePachetDinFisier(f));
+	}
+	fclose(f);
+	return banda;
+}
+
