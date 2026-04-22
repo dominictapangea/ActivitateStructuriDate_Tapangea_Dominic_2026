@@ -68,3 +68,41 @@ Pachet popStiva(NodStiva** cap) {
 		return rezultat;
 	}
 }
+
+void enqueue(Coada* banda, Pachet p) {
+
+	NodCoada* nou = (NodCoada*)malloc(sizeof(NodCoada));
+	nou->info = p;
+	nou->next = NULL;
+	nou->prev = banda->ultim;
+	if (banda->ultim) {
+		banda->ultim->next = nou;
+	}
+	else {
+		banda->prim = nou;
+	}
+	banda->ultim = nou;
+}
+
+Pachet dequeue(Coada* banda) {
+
+	if (!banda->prim) {
+		Pachet rezultat;
+		rezultat.id = -1;
+		return rezultat;
+	}
+	else
+	{
+		Pachet rezultat = banda->prim->info;
+		NodCoada* temp = banda->prim;
+		banda->prim = temp->next;
+		if (!banda->prim) {
+			banda->ultim = NULL;
+		}
+		else {
+			banda->prim->prev = NULL;
+		}
+		free(temp);
+		return rezultat;
+	}
+}
