@@ -183,3 +183,42 @@ Coada citireCoadaDinFisier(const char* numeFisier)
 	return banda;
 }
 
+void dezalocareStiva(NodStiva** cap)
+{
+	while (*cap) {
+		NodStiva* temp = (*cap)->next;
+		free((*cap)->info.destinatar);
+		free(*cap);
+		*cap = temp;
+	}
+}
+
+void dezalocareCoada(Coada* banda)
+{
+	while (banda->prim) {
+		NodCoada* temp = banda->prim->next;
+		free(banda->prim->info.destinatar);
+		free(banda->prim);
+		banda->prim = temp;
+	}
+	banda->ultim = NULL;
+}
+
+int main()
+{
+	NodStiva* dubaCurier = citireStivaDinFisier("pachete.txt");
+	Coada bandaSortare = citireCoadaDinFisier("pachete.txt");
+
+	printf("Pachetul scos de deasupra este:\n");
+	Pachet scosDinDuba = popStiva(&dubaCurier);
+	afisarePachet(scosDinDuba);
+
+	printf("Pachetul procesat primul de pe banda este:\n");
+	Pachet luatDePeBanda = dequeue(&bandaSortare);
+	afisarePachet(luatDePeBanda);
+
+	dezalocareStiva(&dubaCurier);
+	dezalocareCoada(&bandaSortare);
+
+	return 0;
+}
