@@ -127,10 +127,31 @@ void dezalocareArboreDeMasini(NodArbore** radacina) {
 	}
 }
 
-Masina getMasinaByID(/*arborele de masini*/int id) {
-	Masina m;
+Masina getMasinaByID(NodArbore* radacina, int id) {
 
-	return m;
+	if (radacina == NULL) {
+		Masina m;
+		m.id = -1;
+		return m;
+	}
+	else if (id < radacina->info.id) {
+		return getMasinaByID(radacina->left, id);
+	}
+	else if(id>radacina->info.id){
+		return getMasinaByID(radacina->right, id);
+	}
+	else {
+		Masina m = radacina->info;
+
+		m.model = malloc(strlen(radacina->info.model) + 1);
+		strcpy(m.model, radacina->info.model);
+
+		m.numeSofer = malloc(strlen(radacina->info.numeSofer) + 1);
+		strcpy(m.numeSofer, radacina->info.numeSofer);
+
+		return m;
+	}
+
 }
 
 int determinaNumarNoduri(/*arborele de masini*/) {
@@ -158,5 +179,7 @@ int main() {
 
 	NodArbore* radacina = citireArboreDeMasiniDinFisier("masini_arbore.txt");
 	afisareInOrdine(radacina);
+
+	afisareMasina(getMasinaByID(radacina, 3));
 	return 0;
 }
