@@ -154,15 +154,28 @@ Masina getMasinaByID(NodArbore* radacina, int id) {
 
 }
 
-int determinaNumarNoduri(/*arborele de masini*/) {
+int determinaNumarNoduri(NodArbore* radacina) {
 	//calculeaza numarul total de noduri din arborele binar de cautare
+	int nr = 0;
+
+	if (radacina) {
+		if (radacina) {
+			return 1 + determinaNumarNoduri(radacina->left) + determinaNumarNoduri(radacina->right);
+		}
+	}
+
 	return 0;
 }
 
-int calculeazaInaltimeArbore(/*arbore de masini*/) {
-	//calculeaza inaltimea arborelui care este data de 
-	//lungimea maxima de la radacina pana la cel mai indepartat nod frunza
-	return 0;
+int calculeazaInaltimeArbore(NodArbore* radacina) {
+	
+
+	if (radacina) {
+		return 1 + max(calculeazaInaltimeArbore(radacina->left), calculeazaInaltimeArbore(radacina->right));
+	}
+	else {
+		return 0;
+	}
 }
 
 float calculeazaPretTotal(/*arbore de masini*/) {
@@ -181,5 +194,9 @@ int main() {
 	afisareInOrdine(radacina);
 
 	afisareMasina(getMasinaByID(radacina, 3));
+	int numar = determinaNumarNoduri(radacina);
+	printf("\nNumar noduri : %d", numar);
+	int nr = calculeazaInaltimeArbore(radacina);
+	printf("\nNumar")
 	return 0;
 }
