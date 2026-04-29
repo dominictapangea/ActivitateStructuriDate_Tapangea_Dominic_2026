@@ -59,9 +59,6 @@ void afisareMasina(Masina masina) {
 
 
 void adaugaMasinaInArbore( NodArbore** root, Masina masinaNoua) {
-	//adauga o noua masina pe care o primim ca parametru in arbore,
-	//astfel incat sa respecte princiippile de arbore binar de cautare
-	//dupa o anumita cheie pe care o decideti - poate fi ID
 	
 	if (*root) {
 		if ((*root)->info.id > masinaNoua.id) {
@@ -81,17 +78,39 @@ void adaugaMasinaInArbore( NodArbore** root, Masina masinaNoua) {
 	}
 }
 
-void* citireArboreDeMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
+NodArbore* citireArboreDeMasiniDinFisier(const char* numeFisier) {
+
+	FILE* file = fopen(numeFisier, "r");
+	NodArbore* root = NULL;
+	if (file) {
+		while (!feof(file))
+		{
+			Masina m = citireMasinaDinFisier(file);
+			adaugaMasinaInArbore(&root, m);
+		}
+	}
+	fclose(file);
+	return root;
 }
 
-void afisareMasiniDinArbore(/*arbore de masini*/) {
-	//afiseaza toate elemente de tip masina din arborele creat
-	//prin apelarea functiei afisareMasina()
-	//parcurgerea arborelui poate fi realizata in TREI moduri
-	//folositi toate cele TREI moduri de parcurgere
+void afisareInOrdine(NodArbore* root) {
+
+	if (root) {
+		afisareInOrdine(root->left);
+		afisareMasina(root->info);
+		afisareInOrdine(root->right);
+
+	}
+}
+
+void afisareMasiniDinArbore(NodArbore* root) {
+
+	if (root) {
+		afisareMasina(root->info);
+		afisareMasiniDinArbore(root->left);
+		afisareMasiniDinArbore(root->right);
+
+	}
 }
 
 void dezalocareArboreDeMasini(/*arbore de masini*/) {
@@ -127,6 +146,7 @@ float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSo
 
 int main() {
 
-
+	NodArbore* radacina = citireArboreDeMasiniDinFisier("masini_arbore.txt");
+	afisareInOrdine(radacina);
 	return 0;
 }
