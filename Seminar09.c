@@ -113,8 +113,18 @@ void afisareMasiniDinArbore(NodArbore* root) {
 	}
 }
 
-void dezalocareArboreDeMasini(/*arbore de masini*/) {
-	//sunt dezalocate toate masinile si arborele de elemente
+void dezalocareArboreDeMasini(NodArbore** radacina) {
+	
+	if ((*radacina)) {
+		dezalocareArboreDeMasini(&(*radacina)->left);
+		dezalocareArboreDeMasini(&(*radacina)->right);
+
+		free((*radacina)->info.model);
+		free((*radacina)->info.numeSofer);
+		free((*radacina));
+
+		*radacina = NULL;
+	}
 }
 
 Masina getMasinaByID(/*arborele de masini*/int id) {
