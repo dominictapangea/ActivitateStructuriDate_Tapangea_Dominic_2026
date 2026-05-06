@@ -54,6 +54,9 @@ void afisareMasina(Masina masina) {
 
 int calculeazaInaltimeArbore(NodArbore* root) {
 
+	if (root == NULL) {
+
+	}
 	int dr = calculeazaInaltimeArbore(root->right);
 	int st = calculeazaInaltimeArbore(root->left);
 	return 1 + max(dr, st);
@@ -76,16 +79,67 @@ void rotireDreapta(NodArbore** root) {
 	aux->right = (*root);
 	(*root) = aux;
 }
-void adaugaMasinaInArboreEchilibrat(/*arborele de masini*/ Masina masinaNoua) {
-	//adauga o noua masina pe care o primim ca parametru in arbore,
-	//astfel incat sa respecte principiile de arbore binar de cautare ECHILIBRAT
-	//dupa o anumita cheie pe care o decideti - poate fi ID
+
+int verificareEchilibru(NodArbore* root) {
+
+	int dr = calculeazaInaltimeArbore(root->right);
+	int st = calculeazaInaltimeArbore(root->left);
+	return st - dr;
+}
+void adaugaMasinaInArboreEchilibrat(NodArbore** root, Masina masinaNoua) {
+	
+	if ((*root)) {
+
+		if (masinaNoua.id > (*root)->info.id) {
+			adaugaMasinaInArboreEchilibrat(&(*root)->right, masinaNoua);
+		}
+		else
+		{
+			adaugaMasinaInArboreEchilibrat(&(*root)->left, masinaNoua);
+		}
+		//incepe verificarea echilibrului
+		int factorEchilibru = verificareEchilibru(*root);
+		if (factorEchilibru == -2)
+		{
+			//dezechilibru in dreapta
+			if (verificareEchilibru((*root)->right) == -1)
+			{
+				rotireStanga(&(root));
+			}
+			else
+			{
+				rotireDreapta(&(*root)->right);
+				rotireStanga(&(*root));
+			}
+		}
+
+		if (factorEchilibru == 2)
+		{
+			//dezechilibru stanga
+			if (verificareEchilibru((*root)->left) == -1)
+			{
+				rotireStanga(&(*root)->left);
+			}
+			rotireDreapta(&(*root));
+		}
+	}
+	else
+	{
+		NodArbore* nou = malloc(sizeof(NodArbore));
+		nou->left = NULL;
+		nou->right = NULL;
+		nou->info = masinaNoua;
+		(*root) = nou;
+
+	}
 }
 
 void* citireArboreDeMasiniDinFisier(const char* numeFisier) {
 	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
 	//prin apelul repetat al functiei citireMasinaDinFisier()
 	//ATENTIE - la final inchidem fisierul/stream-ul
+
+	FILE* file
 }
 
 void afisareMasiniDinArbore(/*arbore de masini*/) {
