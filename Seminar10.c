@@ -55,7 +55,7 @@ void afisareMasina(Masina masina) {
 int calculeazaInaltimeArbore(NodArbore* root) {
 
 	if (root == NULL) {
-
+		return 0;
 	}
 	int dr = calculeazaInaltimeArbore(root->right);
 	int st = calculeazaInaltimeArbore(root->left);
@@ -104,12 +104,12 @@ void adaugaMasinaInArboreEchilibrat(NodArbore** root, Masina masinaNoua) {
 			//dezechilibru in dreapta
 			if (verificareEchilibru((*root)->right) == -1)
 			{
-				rotireStanga(&(root));
+				rotireStanga(root);
 			}
 			else
 			{
 				rotireDreapta(&(*root)->right);
-				rotireStanga(&(*root));
+				rotireStanga(root);
 			}
 		}
 
@@ -120,8 +120,8 @@ void adaugaMasinaInArboreEchilibrat(NodArbore** root, Masina masinaNoua) {
 			{
 				rotireStanga(&(*root)->left);
 			}
-			rotireDreapta(&(*root));
-		}
+			rotireDreapta(root);
+		}	
 	}
 	else
 	{
@@ -132,25 +132,44 @@ void adaugaMasinaInArboreEchilibrat(NodArbore** root, Masina masinaNoua) {
 		(*root) = nou;
 
 	}
+
 }
 
 void* citireArboreDeMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
-
-	FILE* file
+	
+	NodArbore* root = NULL;
+	FILE* file = fopen(numeFisier, "r");
+	if (file) {
+		while (!feof(file)) {
+			adaugaMasinaInArboreEchilibrat(&root, citireMasinaDinFisier(file));
+		}
+	}
+	fclose(file);
+	return root;
 }
 
-void afisareMasiniDinArbore(/*arbore de masini*/) {
-	//afiseaza toate elemente de tip masina din arborele creat
-	//prin apelarea functiei afisareMasina()
-	//parcurgerea arborelui poate fi realizata in TREI moduri
-	//folositi toate cele TREI moduri de parcurgere
+void afisareMasiniDinArbore(NodArbore* root) {
+	
+	if (root) {
+		afisareMasina(root->info);
+		afisareMasiniDinArbore(root->left);
+		afisareMasiniDinArbore(root->right);
+	}
 }
 
-void dezalocareArboreDeMasini(/*arbore de masini*/) {
+void dezalocareArboreDeMasini(NodArbore** root) {
+
 	//sunt dezalocate toate masinile si arborele de elemente
+	if (*root) {
+		dezalocareArboreDeMasini(&(*root)->left);
+		dezalocareArboreDeMasini(&(*root)->right);
+
+		free((*root)->info.model);
+		free((*root)->info.numeSofer);
+
+		free(*root);
+		*root = NULL;
+	}
 }
 
 //Preluati urmatoarele functii din laboratorul precedent.
@@ -166,6 +185,11 @@ float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSo
 
 int main() {
 
+	NodArbore* root=NULL;
+	root= citireArboreDeMasiniDinFisier("masini.txt");
+	afisareMasiniDinArbore(root);
+
+	dezalocareArboreDeMasini(&root);
 
 	return 0;
 }
