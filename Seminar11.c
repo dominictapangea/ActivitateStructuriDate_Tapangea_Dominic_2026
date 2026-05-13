@@ -111,10 +111,15 @@ void* cautaNodDupaID(NodP* listaPrincipala, int id) {
 	return NULL;
 }
 
-//4.
-//inserare muchie
-void inserareMuchie(void* listaPrincipala, int idStart, int idStop) {
 
+void inserareMuchie(NodP* listaPrincipala, int idStart, int idStop) {
+	NodP* start = cautaNodDupaID(listaPrincipala, idStart);
+	NodP* stop = cautaNodDupaID(listaPrincipala, idStop);
+	if (start != NULL && stop != NULL)
+	{
+		inserareListaS(&start->vecini, stop);
+		inserareListaS(&stop->vecini, start);
+	}
 }
 
 
