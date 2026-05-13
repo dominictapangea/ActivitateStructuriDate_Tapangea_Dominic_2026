@@ -47,10 +47,6 @@ void afisareMasina(Masina masina) {
 	printf("Serie: %c\n\n", masina.serie);
 }
 
-//1. 
-// structuri necesare
-//dorim stocarea unui graf intr-o lista de liste
-//astfel avem nod ListaPrincipala si NodListaSecundara
 typedef struct NodP NodP;
 typedef struct NodS NodS;
 
@@ -64,9 +60,7 @@ struct NodS {
 	NodS* next;
 	NodP* info;
 };
-//2.
-//functii de inserare in liste
-//si in principala si in secundara
+
 
 void inserareListaP(NodP** graf, Masina m)
 {
@@ -106,10 +100,15 @@ void inserareListaS(NodS** lista, NodP* vecin)
 
 	}
 }
-//3.
-//functie de cautarea in lista principala dupa ID
-void* cautaNodDupaID(void* listaPrincipala, int id) {
 
+void* cautaNodDupaID(NodP* listaPrincipala, int id) {
+	NodP* temp = listaPrincipala;
+	while (temp) {
+		if (temp->m.id == id)
+			return temp;
+		temp = temp->next;
+	}
+	return NULL;
 }
 
 //4.
