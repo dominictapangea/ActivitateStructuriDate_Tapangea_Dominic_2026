@@ -90,3 +90,18 @@ void inserareMasinaInHeap(Heap* heap, Masina masinaNoua)
 		}
 	}
 }
+
+Masina extrageMasina(Heap* heap) {
+	Masina rezultat;
+	rezultat.id = -1;
+
+	if (heap->nrElemViz > 0) {
+		rezultat = heap->vector[0];
+
+		heap->vector[0] = heap->vector[heap->nrElemViz - 1];
+		heap->nrElemViz--;
+
+		filtreazaHeap(*heap,0);
+	}
+	return rezultat;
+}
