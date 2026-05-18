@@ -40,3 +40,42 @@ void afisarePacient(Pacient p)
 }
 
 
+void filtreazaHeap(Heap heap, int pozitieNod)
+{
+	int stanga = 2 * pozitieNod + 1;
+	int dreapta = 2 * pozitieNod + 2;
+	int pozMax = pozitieNod;
+
+	if (stanga<heap.nrElemViz && heap.vector[stanga].gradUrgenta>heap.vector[pozMax].gradUrgenta) {
+		pozMax = stanga;
+	}
+
+	if (dreapta<heap.nrElemViz && heap.vector[dreapta].gradUrgenta>heap.vector[pozMax].gradUrgenta) {
+		pozMax = dreapta;
+	}
+
+	if (pozMax != pozitieNod) {
+		Pacient aux = heap.vector[pozMax];
+		heap.vector[pozMax] = heap.vector[pozitieNod];
+		heap.vector[pozitieNod] = aux;
+
+		filtreazaHeap(heap, pozMax);
+	}
+}
+
+Pacient extragePacient(Heap* heap)
+{
+	Pacient rezultat;
+	rezultat.id = -1;
+
+	if (heap->nrElemViz > 0) {
+		rezultat = heap->vector[0];
+
+		heap->vector[0] = heap->vector[heap->nrElemViz - 1];
+				heap->nrElemViz--;
+		
+		filtreazaHeap(*heap,0);
+		return rezultat;
+	}
+
+}
