@@ -75,7 +75,48 @@ Pacient extragePacient(Heap* heap)
 				heap->nrElemViz--;
 		
 		filtreazaHeap(*heap,0);
-		return rezultat;
 	}
+	return rezultat;
+}
 
+
+Pacient citirePacientDinFisier(FILE* f)
+{
+	char buffer[100];
+	char sep[3];
+	fgets(buffer, 100, f);
+
+	char* aux;
+	Pacient p1;
+
+	aux = strtok(buffer, sep);
+	p1.id = atoi(aux);
+	p1.varsta = atoi(strtok(NULL, sep));
+	p1.gradUrgenta = atoi(strtok(NULL, sep));
+
+	aux = strtok(NULL, sep);
+	p1.nume = (char*)malloc(strlen(aux) + 1);
+	strcpy(p1.nume, aux);
+
+	p1.simptome = (char*)malloc(strlen(aux) + 1);
+	strcpy(p1.simptome, aux);
+}
+
+
+Heap citireHeapDinFisier(const char* numeFisier)
+{
+	FILE* f = fopen(numeFisier, "r");
+	Heap heap = initializareHeap(20);
+	if (f) {
+		while (!feof(f)) {
+			heap.vector[heap.nrElemViz++] = citirePacientDinFisier(f);
+
+		}
+		fclose(f);
+
+		for (int i = (heap.nrElemViz - 2) / 2;i >= 0;i--) {
+			filtreazaHeap(heap, i);
+		}
+	}
+	return heap;
 }
