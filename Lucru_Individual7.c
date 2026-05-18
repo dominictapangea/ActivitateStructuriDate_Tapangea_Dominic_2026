@@ -40,6 +40,13 @@ void afisarePacient(Pacient p)
 }
 
 
+void afisareHeap(Heap heap) {
+	for (int i = 0;i < heap.nrElemViz;i++) {
+		afisarePacient(heap.vector[i]);
+	}
+}
+
+
 void filtreazaHeap(Heap heap, int pozitieNod)
 {
 	int stanga = 2 * pozitieNod + 1;
@@ -83,7 +90,7 @@ Pacient extragePacient(Heap* heap)
 Pacient citirePacientDinFisier(FILE* f)
 {
 	char buffer[100];
-	char sep[3];
+	char sep[3] = ",\n";
 	fgets(buffer, 100, f);
 
 	char* aux;
@@ -91,15 +98,18 @@ Pacient citirePacientDinFisier(FILE* f)
 
 	aux = strtok(buffer, sep);
 	p1.id = atoi(aux);
-	p1.varsta = atoi(strtok(NULL, sep));
-	p1.gradUrgenta = atoi(strtok(NULL, sep));
 
 	aux = strtok(NULL, sep);
 	p1.nume = (char*)malloc(strlen(aux) + 1);
 	strcpy(p1.nume, aux);
-
+	p1.varsta = atoi(strtok(NULL, sep));
+	p1.gradUrgenta = atoi(strtok(NULL, sep));
+	
+	aux = strtok(NULL, sep);
 	p1.simptome = (char*)malloc(strlen(aux) + 1);
 	strcpy(p1.simptome, aux);
+
+	return p1;
 }
 
 
@@ -119,4 +129,31 @@ Heap citireHeapDinFisier(const char* numeFisier)
 		}
 	}
 	return heap;
+}
+
+void dezalocareHeap(Heap* heap)
+{
+	for (int i = 0;i < heap->nrElemViz;i++) {
+		free(heap->vector[i].nume);
+		free(heap->vector[i].simptome);
+	}
+	free(heap->vector);
+	heap->lungime = 0;
+	heap->nrElemViz = 0;
+	heap->vector = NULL;
+}
+
+int main()
+{
+	Heap heap = citireHeapDinFisier("pacienti.txt");
+	afisareHeap(heap);
+
+	printf("Extrageri: \n");
+	Pacient p1 = extragePacient(&heap);
+	afisarePacient(p1);
+	Pacient p2 = extragePacient(&heap);
+	afisarePacient(p2);
+
+	dezalocareHeap(&heap);
+	return 0;
 }
