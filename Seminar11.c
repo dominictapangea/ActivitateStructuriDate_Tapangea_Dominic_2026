@@ -154,9 +154,24 @@ void afisareListaVecini(NodP* graf, int id)
 		cap = cap->next;
 	}
 }
-void dezalocareNoduriGraf(void* listaPrincipala) {
-	//sunt dezalocate toate masinile din graf 
-	//si toate nodurile celor doua liste
+void dezalocareNoduriGraf(NodP* listaPrincipala) {
+	
+	while (listaPrincipala != NULL) {
+
+		NodP* tempP = listaPrincipala;
+		listaPrincipala = (listaPrincipala)->next;
+
+		NodS* tempS = tempP->vecini;
+		while (tempS != NULL) {
+			NodS* muchieDeSters = tempS;
+			tempS = tempS->next;
+			free(muchieDeSters);
+		}
+
+		free(tempP->m.model);
+		free(tempP->m.numeSofer);
+		free(tempP);
+	}
 }
 
 int main() {
@@ -164,7 +179,8 @@ int main() {
 	NodP* graf=NULL;
 	graf = (NodP*)citireNoduriMasiniDinFisier("masini.txt");
 	citireMuchiiDinFisier("muchii.txt", graf);
-	afisareListaVecini(&graf, 3);
+	afisareListaVecini(graf, 3);
 
+	dezalocareNoduriGraf(&graf);
 	return 0;
 }
