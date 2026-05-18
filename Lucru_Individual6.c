@@ -71,3 +71,22 @@ void filtreazaHeap(Heap heap, int pozitieNod)
 		filtreazaHeap(heap, pozMax);
 	}
 }
+
+void inserareMasinaInHeap(Heap* heap, Masina masinaNoua)
+{
+	if (heap->nrElemViz < heap->lungime) {
+		heap->vector[heap->nrElemViz] = masinaNoua;
+		int pozitieCurenta = heap->nrElemViz;
+		heap->nrElemViz++;
+
+		int parinte = (pozitieCurenta - 1) / 2;
+		while (pozitieCurenta > 0 && heap->vector[pozitieCurenta].pret > heap->vector[parinte].pret) {
+			Masina aux = heap->vector[pozitieCurenta];
+			heap->vector[pozitieCurenta] = heap->vector[parinte];
+			heap->vector[parinte] = aux;
+
+			pozitieCurenta = parinte;
+			parinte = (pozitieCurenta - 1) / 2;
+		}
+	}
+}
