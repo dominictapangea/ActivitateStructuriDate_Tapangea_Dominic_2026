@@ -38,3 +38,36 @@ void afisareHeap(Heap heap) {
 		afisareMasina(heap.vector[i]);
 	}
 }
+
+
+Heap initializareHeap(int lungime)
+{
+	Heap heap;
+	heap.lungime = lungime;
+	heap.nrElemViz = 0;
+	heap.vector = (Masina*)malloc(sizeof(Masina) * lungime);
+	return heap;
+}
+
+void filtreazaHeap(Heap heap, int pozitieNod)
+{
+	int stanga = 2 * pozitieNod + 1;
+	int dreapta = 2 * pozitieNod + 2;
+	int pozMax = pozitieNod;
+
+	if (stanga<heap.nrElemViz && heap.vector[stanga].pret>heap.vector[pozMax].pret) {
+		pozMax = stanga;
+	}
+
+	if (dreapta<heap.nrElemViz && heap.vector[dreapta].pret>heap.vector[pozMax].pret) {
+		pozMax = dreapta;
+	}
+
+	if (pozMax != pozitieNod) {
+		Masina aux = heap.vector[pozMax];
+		heap.vector[pozMax] = heap.vector[pozitieNod];
+		heap.vector[pozitieNod] = aux;
+
+		filtreazaHeap(heap, pozMax);
+	}
+}
