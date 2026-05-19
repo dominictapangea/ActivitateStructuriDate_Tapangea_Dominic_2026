@@ -54,3 +54,41 @@ void afisareInOrdine(NodArbore* radacina)
 		afisareInOrdine(radacina->right);
 	}
 }
+
+Carte cautareDupaID(NodArbore* radacina, int idCautat)
+{
+	if (radacina = NULL) {
+		Carte c;
+		c.id = -1;
+		return c;
+	}
+	else if (idCautat < radacina->info.id) {
+		return cautareDupaID(radacina->left, idCautat);
+	}
+	else if (idCautat > radacina->info.id) {
+		return cautareDupaID(radacina->right, idCautat);
+	}
+	else {
+		Carte c = radacina->info;
+		c.titlu = (char*)malloc(strlen(radacina->info.titlu) + 1);
+		strcpy(c.titlu, radacina->info.titlu);
+		return c;
+	}
+}
+
+
+int numarNoduri(NodArbore* radacina) {
+	if (radacina != NULL) {
+		return 1 + numarNoduri(radacina->left) + numarNoduri(radacina->right);
+	}
+	return 0;
+}
+
+int inaltimeArbore(NodArbore* radacina)
+{
+	if (radacina != NULL) {
+		return 1 + max(inaltimeArbore(radacina->left), inaltimeArbore(radacina->right));
+	}
+	return 0;
+}
+
