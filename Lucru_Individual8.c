@@ -92,3 +92,38 @@ int inaltimeArbore(NodArbore* radacina)
 	return 0;
 }
 
+
+Carte citireCarteDinFisier(FILE* f)
+{
+	char buffer[256];
+	char sep[3] = ",\n";
+	fgets(buffer, 256, f);
+
+	char* aux;
+	Carte c;
+
+	aux = strtok(buffer, sep);
+	c.id = atoi(aux);
+
+	aux = strtok(NULL, sep);
+	c.titlu = (char*)malloc(strlen(aux) + 1);
+	strcpy(c.titlu, aux);
+
+	c.pret = atof(strtok(NULL, sep));
+
+	return c;
+}
+
+NodArbore* citireArboreDinFisier(const char* numeFisier)
+{
+	FILE* f = fopen(numeFisier, "r");
+	NodArbore* radacina = NULL;
+	if (f) {
+		while (!feof(f)) {
+			inserareInAbrore(&radacina, citireCarteDinFisier(f));
+		}
+		fclose(f);
+	}
+	return radacina;
+}
+
