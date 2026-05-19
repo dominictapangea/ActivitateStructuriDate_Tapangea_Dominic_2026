@@ -21,3 +21,21 @@ struct NodArbore {
 
 typedef struct NodArbore NodArbore;
 
+
+void inserareInAbrore(NodArbore** radacina, Carte c) {
+	if (*radacina != NULL) {
+		if (c.id < (*radacina)->info.id) {
+			inserareInAbrore(&(*radacina)->left, c);
+		}
+		else if (c.id > (*radacina)->info.id) {
+			inserareInAbrore(&(*radacina)->right, c);
+		}
+	}
+	else {
+		NodArbore* nou = (NodArbore*)malloc(sizeof(NodArbore));
+		nou->info = c;
+		nou->left = NULL;
+		nou->right = NULL;
+		*radacina = nou;
+	}
+}
