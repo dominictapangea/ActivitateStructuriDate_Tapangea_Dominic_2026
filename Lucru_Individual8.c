@@ -127,3 +127,15 @@ NodArbore* citireArboreDinFisier(const char* numeFisier)
 	return radacina;
 }
 
+
+void dezalocareArbore(NodArbore** radacina)
+{
+	if (*radacina != NULL) {
+		dezalocareArbore(&(*radacina)->left);
+		dezalocareArbore(&(*radacina)->right);
+
+		free((*radacina)->info.titlu);
+		free(*radacina);
+		*radacina = NULL;
+	}
+}
