@@ -139,3 +139,19 @@ void dezalocareArbore(NodArbore** radacina)
 		*radacina = NULL;
 	}
 }
+
+
+int main()
+{
+	NodArbore* radacina = citireArboreDinFisier("carti.txt");
+	afisareInOrdine(radacina);
+
+	printf("Arborele are %d carti si o inaltime de %d etaje\n\n", numarNoduri(radacina), inaltimeArbore(radacina));
+
+	Carte cautata = cautareDupaID(radacina, 70);
+	afisareCarte(cautata);
+	free(cautata.titlu);
+
+	dezalocareArbore(&radacina);
+	return 0;
+}
