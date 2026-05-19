@@ -39,3 +39,18 @@ void inserareInAbrore(NodArbore** radacina, Carte c) {
 		*radacina = nou;
 	}
 }
+
+
+void afisareCarte(Carte c)
+{
+	printf("ID: %d || Titlu: %-15s || Pret: %.2f RON\n", c.id, c.titlu, c.pret);
+}
+
+void afisareInOrdine(NodArbore* radacina) 
+{
+	if (radacina != NULL) {
+		afisareInOrdine(radacina->left);
+		afisareCarte(radacina->info);
+		afisareInOrdine(radacina->right);
+	}
+}
